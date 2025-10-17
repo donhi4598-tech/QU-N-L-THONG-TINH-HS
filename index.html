@@ -1,0 +1,422 @@
+<index html>
+  <html lang="vi">
+    <head>
+      <meta charset="UTF-8" />
+      <title>Quản lý thông tin học sinh</title>
+      <meta name="viewport" content="width=device-width,initial-scale=1" />
+      <style>
+        body {
+          background: #e7f2fb;
+          font-family: Arial, sans-serif;
+          color: #204065;
+          margin: 0;
+          padding: 0;
+        }
+        h1 {
+          text-align: center;
+          color: #2176ae;
+          margin-top: 24px;
+          margin-bottom: 16px;
+        }
+        .container {
+          max-width: 1100px;
+          margin: 0 auto 32px auto;
+          background: #f7fbff;
+          border-radius: 14px;
+          box-shadow: 0 2px 12px rgba(50, 100, 200, 0.12);
+          padding: 30px 28px 28px 28px;
+        }
+        .student-list-horizontal {
+          display: flex;
+          flex-direction: row;
+          gap: 9px;
+          overflow-x: auto;
+          background: #c6e6fa;
+          border-radius: 10px;
+          padding: 11px 0 11px 6px;
+          margin-bottom: 12px;
+          min-height: 46px;
+        }
+        .student-name-btn {
+          background: #2196f3;
+          color: #fff;
+          border: none;
+          border-radius: 20px;
+          padding: 8px 22px;
+          font-size: 16px;
+          cursor: pointer;
+          margin: 0 4px;
+          transition: background 0.16s, color 0.16s;
+          outline: none;
+          white-space: nowrap;
+        }
+        .student-name-btn:hover,
+        .student-name-btn.active {
+          background: #1967a7;
+          color: #cce6ff;
+        }
+        .main-layout {
+          display: flex;
+          flex-direction: row;
+          gap: 32px;
+        }
+        .form-section {
+          flex: 1;
+          min-width: 220px;
+          max-width: 320px;
+          background: #e3f0fa;
+          border-radius: 10px;
+          padding: 24px 18px 16px 18px;
+          box-shadow: 0 1px 4px rgba(33, 118, 174, 0.08);
+          margin-top: 0;
+          margin-bottom: 10px;
+          align-self: flex-start;
+          transition: box-shadow 0.2s;
+        }
+        .form-section.editing {
+          box-shadow: 0 0 0 2px #2196f3;
+        }
+        label {
+          font-weight: 600;
+          color: #2176ae;
+        }
+        input,
+        select {
+          width: 100%;
+          padding: 8px 10px;
+          margin: 6px 0 15px 0;
+          border: 1px solid #b5d0ea;
+          border-radius: 6px;
+          background: #e4f3fd;
+          font-size: 15px;
+        }
+        button {
+          background: #2196f3;
+          color: #fff;
+          border: none;
+          padding: 9px 18px;
+          border-radius: 6px;
+          font-size: 16px;
+          cursor: pointer;
+          margin-top: 4px;
+          margin-right: 5px;
+          transition: background 0.16s;
+        }
+        button[type="button"].edit-btn {
+          background: #17a2b8;
+          font-size: 15px;
+          padding: 8px 13px;
+          margin-bottom: 12px;
+          margin-right: 8px;
+        }
+        button[type="button"].edit-btn:hover {
+          background: #0b7091;
+        }
+        button[type="button"].delete-btn {
+          background: #e53935;
+          font-size: 15px;
+          padding: 8px 13px;
+        }
+        button[type="button"].delete-btn:hover {
+          background: #ab1815;
+        }
+        .form-section .cancel-btn {
+          background: #a4b7c2;
+        }
+        .form-section .cancel-btn:hover {
+          background: #7a8c95;
+        }
+        .info-section {
+          flex: 2.5;
+          min-width: 340px;
+          background: #e3f0fa;
+          border-radius: 10px;
+          padding: 35px 38px 28px 38px;
+          box-shadow: 0 1px 6px rgba(33, 118, 174, 0.1);
+          margin-top: 0;
+          margin-bottom: 10px;
+        }
+        .info-title {
+          color: #1967a7;
+          font-size: 22px;
+          margin-bottom: 18px;
+          font-weight: bold;
+        }
+        .info-label {
+          font-weight: bold;
+          color: #2176ae;
+        }
+        .contact-link {
+          color: #1a8cff;
+          text-decoration: none;
+        }
+        @media (max-width: 1100px) {
+          .container {
+            padding: 10px 1vw 22px 1vw;
+          }
+          .info-section {
+            padding: 18px 4vw 14px 4vw;
+          }
+        }
+        @media (max-width: 900px) {
+          .main-layout {
+            flex-direction: column-reverse;
+            gap: 14px;
+          }
+          .info-section {
+            margin-bottom: 12px;
+            padding: 12px 2vw 8px 2vw;
+          }
+          .form-section {
+            margin: 0 auto 0 auto;
+          }
+        }
+        @media (max-width: 650px) {
+          .info-section {
+            padding: 10px 0 6px 0;
+            font-size: 15px;
+          }
+          .form-section {
+            padding: 10px 2vw 9px 2vw;
+          }
+          .student-list-horizontal {
+            min-height: 28px;
+            padding: 5px 0 5px 3px;
+          }
+          .student-name-btn {
+            font-size: 13px;
+            padding: 5px 8px;
+          }
+        }
+      </style>
+    </head>
+    <body>
+      <h1>Quản lý thông tin học sinh</h1>
+      <div class="container">
+        <div class="student-list-horizontal" id="student-list">
+          <!-- Danh sách học sinh sẽ hiển thị ở đây -->
+        </div>
+        <div class="main-layout">
+          <div class="form-section" id="form-section">
+            <form id="student-form" autocomplete="off">
+              <input type="hidden" id="editing-idx" value="" />
+
+              <label>Họ và tên</label>
+              <input type="text" id="name" required />
+
+              <label>Lớp</label>
+              <input type="text" id="class" required />
+
+              <label>Ngày tháng năm sinh</label>
+              <input type="date" id="birthday" required />
+
+              <label>Số điện thoại</label>
+              <input type="text" id="phone" required />
+
+              <label>Quê quán</label>
+              <input type="text" id="hometown" required />
+
+              <label>Quốc tịch</label>
+              <input type="text" id="nationality" required />
+
+              <label>Giới tính</label>
+              <select id="gender" required>
+                <option value="">--Chọn giới tính--</option>
+                <option value="Nam">Nam</option>
+                <option value="Nữ">Nữ</option>
+                <option value="Khác">Khác</option>
+              </select>
+
+              <button type="submit" id="submit-btn">Thêm học sinh</button>
+              <button
+                type="button"
+                class="cancel-btn"
+                id="cancel-btn"
+                style="display: none"
+              >
+                Huỷ
+              </button>
+            </form>
+          </div>
+          <div class="info-section" id="student-info">
+            <em>Chọn một học sinh để xem thông tin chi tiết.</em>
+          </div>
+        </div>
+      </div>
+      <script>
+        // Lưu và lấy dữ liệu từ localStorage
+        function getStudents() {
+          return JSON.parse(localStorage.getItem("students")) || [];
+        }
+        function saveStudents(students) {
+          localStorage.setItem("students", JSON.stringify(students));
+        }
+
+        // Hiển thị danh sách học sinh theo hàng ngang
+        function renderStudentList(selectedIdx = null) {
+          const students = getStudents();
+          const listDiv = document.getElementById("student-list");
+          if (students.length === 0) {
+            listDiv.innerHTML = "<em>Chưa có học sinh nào.</em>";
+            renderStudentInfo(null);
+            return;
+          }
+          let html = "";
+          students.forEach((student, i) => {
+            html += `<button type="button" class="student-name-btn${
+              selectedIdx === i ? " active" : ""
+            }" onclick="showStudentInfo(${i})">${student.name}</button>`;
+          });
+          listDiv.innerHTML = html;
+          // Nếu đã chọn thì giữ lại highlight
+          if (selectedIdx !== null) renderStudentInfo(selectedIdx);
+        }
+
+        // Hiển thị thông tin chi tiết học sinh khi bấm vào tên
+        function renderStudentInfo(idx) {
+          const students = getStudents();
+          const infoDiv = document.getElementById("student-info");
+          if (idx === null || students.length === 0 || !students[idx]) {
+            infoDiv.innerHTML =
+              "<em>Chọn một học sinh để xem thông tin chi tiết.</em>";
+            return;
+          }
+          const student = students[idx];
+          infoDiv.innerHTML = `
+                <button type="button" class="edit-btn" onclick="editStudent(${idx})">Chỉnh sửa</button>
+                <button type="button" class="delete-btn" onclick="deleteStudent(${idx})">Xóa</button>
+                <div class="info-title">Thông tin chi tiết: ${
+                  student.name
+                }</div>
+                <div><span class="info-label">Lớp:</span> ${student.class}</div>
+                <div><span class="info-label">Ngày sinh:</span> ${
+                  student.birthday ? formatDate(student.birthday) : ""
+                }</div>
+                <div><span class="info-label">Số điện thoại:</span> <a class="contact-link" href="tel:${
+                  student.phone
+                }">${student.phone}</a></div>
+                <div><span class="info-label">Quê quán:</span> ${
+                  student.hometown
+                }</div>
+                <div><span class="info-label">Quốc tịch:</span> ${
+                  student.nationality
+                }</div>
+                <div><span class="info-label">Giới tính:</span> ${
+                  student.gender
+                }</div>
+            `;
+        }
+
+        // Định dạng ngày sinh
+        function formatDate(dateStr) {
+          const d = new Date(dateStr);
+          if (isNaN(d)) return dateStr;
+          let day = d.getDate();
+          let month = d.getMonth() + 1;
+          let year = d.getFullYear();
+          return (
+            (day < 10 ? "0" : "") +
+            day +
+            "/" +
+            (month < 10 ? "0" : "") +
+            month +
+            "/" +
+            year
+          );
+        }
+
+        // Hàm cho onclick
+        window.showStudentInfo = function (idx) {
+          renderStudentList(idx);
+        };
+
+        // Chỉnh sửa học sinh
+        window.editStudent = function (idx) {
+          const students = getStudents();
+          const student = students[idx];
+          document.getElementById("editing-idx").value = idx;
+          document.getElementById("name").value = student.name;
+          document.getElementById("class").value = student.class;
+          document.getElementById("birthday").value = student.birthday || "";
+          document.getElementById("phone").value = student.phone;
+          document.getElementById("hometown").value = student.hometown;
+          document.getElementById("nationality").value = student.nationality;
+          document.getElementById("gender").value = student.gender;
+          document.getElementById("submit-btn").textContent = "Cập nhật";
+          document.getElementById("cancel-btn").style.display = "inline-block";
+          document.getElementById("form-section").classList.add("editing");
+          document.getElementById("name").focus();
+        };
+
+        // Xóa học sinh
+        window.deleteStudent = function (idx) {
+          if (!confirm("Bạn có chắc muốn xóa học sinh này?")) return;
+          let students = getStudents();
+          students.splice(idx, 1);
+          saveStudents(students);
+          renderStudentList();
+          resetForm();
+        };
+
+        // Huỷ chỉnh sửa
+        document.getElementById("cancel-btn").onclick = function () {
+          resetForm();
+        };
+
+        // Reset form về trạng thái thêm mới
+        function resetForm() {
+          document.getElementById("student-form").reset();
+          document.getElementById("editing-idx").value = "";
+          document.getElementById("submit-btn").textContent = "Thêm học sinh";
+          document.getElementById("cancel-btn").style.display = "none";
+          document.getElementById("form-section").classList.remove("editing");
+        }
+
+        // Xử lý submit form (thêm mới hoặc cập nhật)
+        document.getElementById("student-form").onsubmit = function (e) {
+          e.preventDefault();
+          const student = {
+            name: document.getElementById("name").value.trim(),
+            class: document.getElementById("class").value.trim(),
+            birthday: document.getElementById("birthday").value,
+            phone: document.getElementById("phone").value.trim(),
+            hometown: document.getElementById("hometown").value.trim(),
+            nationality: document.getElementById("nationality").value.trim(),
+            gender: document.getElementById("gender").value,
+          };
+          // Kiểm tra bắt buộc các trường
+          if (
+            !student.class ||
+            !student.name ||
+            !student.phone ||
+            !student.hometown ||
+            !student.nationality ||
+            !student.gender ||
+            !student.birthday
+          ) {
+            alert("Vui lòng nhập đủ các thông tin quan trọng!");
+            return;
+          }
+          const idx = document.getElementById("editing-idx").value;
+          let students = getStudents();
+          if (idx !== "") {
+            // cập nhật
+            students[idx] = student;
+            saveStudents(students);
+            renderStudentList(Number(idx));
+            resetForm();
+          } else {
+            // thêm mới
+            students.push(student);
+            saveStudents(students);
+            renderStudentList(students.length - 1); // tự động chọn học sinh vừa thêm
+            resetForm();
+          }
+        };
+
+        // Hiển thị ngay khi tải trang
+        renderStudentList();
+      </script>
+    </body>
+  </html></index
+>
